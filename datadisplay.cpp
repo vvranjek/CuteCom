@@ -259,6 +259,14 @@ void DataDisplay::constructDisplayLine(const QByteArray &inData)
                 line.data += b;
             }
 
+        }
+        /* Remove escape sequence */
+        else if (b == 0x1b) {
+            if (inData.size()-i >=1) {
+                if (inData.at(i+1) == '[' && inData.at(i+2) == 'K') {
+                    i += 2;
+                }
+            }
         } else {
             if (b == '\0') {
                 line.data += "<break>\n";
@@ -343,7 +351,10 @@ void DataDisplay::setupTextFormats()
     QFont font;
     font.setFamily(font.defaultFamily());
     font.setPointSize(10);
-    format.setFont(font);
+
+    QFont newFont("Monospace", 10, QFont::Monospace, false);
+
+    format.setFont(newFont);
     m_format_data = new QTextCharFormat(format);
     //    qDebug() << m_format_data->foreground();
 

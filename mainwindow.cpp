@@ -906,6 +906,15 @@ void MainWindow::processData()
     // QByteArray data = temp.toLatin1();
     // :Debugging
 
+    /* Make sure the whole escape sequence is has arrived */
+    unsigned int escIndex = data.lastIndexOf("0x1b");
+    if (escIndex >= 0 && escIndex > data.size()-2) {
+        QThread::msleep(2000);
+        QByteArray add = m_device->readAll();
+        data.append(add);
+    }
+
+
     if (m_logFile.isOpen()) {
         m_logFile.write(data);
     }
